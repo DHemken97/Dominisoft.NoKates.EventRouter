@@ -4,4 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Dominisoft.Nokates.Common" Version="1.0.19" />
+  </ItemGroup>
+
 </Project>
