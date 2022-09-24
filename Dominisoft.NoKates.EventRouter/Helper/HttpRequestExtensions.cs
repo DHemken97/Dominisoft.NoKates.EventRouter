@@ -29,3 +29,4 @@ namespace Dominisoft.NoKates.EventRouter.Helper
             return body;
         }
     }
+}
