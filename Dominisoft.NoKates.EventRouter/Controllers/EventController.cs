@@ -3,6 +3,7 @@ using System.Threading;
 using Dominisoft.Nokates.Common.Infrastructure.Attributes;
 using Dominisoft.Nokates.Common.Infrastructure.Controllers;
 using Dominisoft.Nokates.Common.Infrastructure.Extensions;
+using Dominisoft.NoKates.EventRouter.Helper;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 
@@ -15,9 +16,10 @@ namespace Dominisoft.NoKates.EventRouter.Controllers
         [HttpGet("{routingKey}")]
         [EndpointGroup("Events")]
         [NoAuth]
-        public bool PublishEventByRoutingKey(string routingKey, [FromBody] Dictionary<string,string> eventDetails)
+        public bool PublishEventByRoutingKey(string routingKey)
         {
             var requestId = Thread.CurrentThread.GetRequestId();
+            var eventDetails = Request.GetRawBody();
             EventRouter.ProcessEvent(routingKey,eventDetails.Serialize(), requestId);
             return true;
         }
