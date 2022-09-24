@@ -21,19 +21,27 @@ namespace Dominisoft.NoKates.EventRouter
         {
            return await Task.Run(() =>
             {
-                var matchingDefinitions = _routingDefinitions.Where(rd => rd.RoutingKey == routingKey).ToList();
-                if (!matchingDefinitions.Any())
+                try
                 {
-                    var message = $"Could not find any matching Routing Definitions for '{routingKey}'";
-                    LoggingHelper.LogMessage(message);
-                    return true;
+                    var matchingDefinitions = _routingDefinitions.Where(rd => rd.RoutingKey == routingKey).ToList();
+                    if (!matchingDefinitions.Any())
+                    {
+                        var message = $"Could not find any matching Routing Definitions for '{routingKey}'";
+                        LoggingHelper.LogMessage(message);
+                        return true;
+                    }
+                    LoggingHelper.LogMessage("EventDetails:"+eventDetails);
+                    LoggingHelper.LogMessage($"{routingKey} : {matchingDefinitions.Count} Routes Found");
+                    foreach (var matchingDefinition in matchingDefinitions)
+                    {
+                        CreateRequestFromDefinition(matchingDefinition, eventDetails, requestId);
+                    }
+                }
+                catch (Exception e)
+                {
+                    LoggingHelper.LogMessage(e.Message);
                 }
 
-                LoggingHelper.LogMessage($"{routingKey} : {matchingDefinitions.Count} Routes Found");
-                foreach (var matchingDefinition in matchingDefinitions)
-                {
-                    CreateRequestFromDefinition(matchingDefinition, eventDetails,requestId);
-                }
 
                 return true;
             });
@@ -45,7 +53,7 @@ namespace Dominisoft.NoKates.EventRouter
             var path = TransformHelper.ReplaceValues(matchingDefinition.RequestUri, eventDetails);
             var body = TransformHelper.ReplaceValues(matchingDefinition.RequestBody, eventDetails);
             Thread.CurrentThread.SetRequestId(requestId);
-
+            LoggingHelper.LogMessage($"{matchingDefinition.DefinitionName} : {matchingDefinition.RequestType} {path}");
             switch (matchingDefinition.RequestType)
             {
                 case "GET":

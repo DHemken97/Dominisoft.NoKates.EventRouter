@@ -20,7 +20,8 @@ namespace Dominisoft.NoKates.EventRouter.Controllers
         {
             var requestId = Thread.CurrentThread.GetRequestId();
             var eventDetails = Request.GetRawBody();
-            EventRouter.ProcessEvent(routingKey,eventDetails.Serialize(), requestId);
+
+            EventRouter.ProcessEvent(routingKey,eventDetails, requestId);
             return true;
         }
     }
