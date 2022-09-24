@@ -6,8 +6,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Dominisoft.Nokates.Common.Infrastructure.Configuration;
+using Dominisoft.Nokates.Common.Infrastructure.Extensions;
+using Dominisoft.NoKates.EventRouter.Common;
 
 namespace Dominisoft.NoKates.EventRouter
 {
@@ -23,7 +27,10 @@ namespace Dominisoft.NoKates.EventRouter
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRazorPages();
+            services.AddNokates();
+            var filePath = ConfigurationValues.Values["RoutingDefinitionFilePath"];
+            var routingDefinitions = File.ReadAllText(filePath).Deserialize<List<RoutingDefinition>>();
+            EventRouter.SetRoutingDefinitions(routingDefinitions);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,16 +48,16 @@ namespace Dominisoft.NoKates.EventRouter
             }
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseNokates();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
+                endpoints.MapControllers();
             });
+
         }
     }
 }

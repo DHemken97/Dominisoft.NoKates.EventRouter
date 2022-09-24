@@ -8,4 +8,8 @@
     <PackageReference Include="Dominisoft.Nokates.Common" Version="1.0.19" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Dominisoft.NoKates.EventRouter.Common\Dominisoft.NoKates.EventRouter.Common.csproj" />
+  </ItemGroup>
+
 </Project>

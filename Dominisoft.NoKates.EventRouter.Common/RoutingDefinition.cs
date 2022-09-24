@@ -8,7 +8,6 @@ namespace Dominisoft.NoKates.EventRouter.Common
         public string RoutingKey { get; set; }
         public string RequestType { get; set; }
         public string RequestBody { get; set; }
-        public string[] RequestHeaders { get; set; }
         public string RequestUri { get; set; }
     }
 }
