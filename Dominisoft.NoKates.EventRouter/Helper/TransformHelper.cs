@@ -9,6 +9,9 @@ namespace Dominisoft.NoKates.EventRouter.Helper
         public static string ReplaceValues(string template, string values)
         {
 
+            if (template.Trim() == "*")
+                return values;
+
             var result = template;
 
             Regex expression = new Regex(@"{{(?<Identifier>[A-Za-z0-9.\[\]]*)}}");

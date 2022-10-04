@@ -28,11 +28,15 @@ namespace Dominisoft.NoKates.EventRouter
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddNokates();
+            LoadRoutingDefinitions();
+        }
+
+        public static void LoadRoutingDefinitions()
+        {
             var filePath = ConfigurationValues.Values["RoutingDefinitionFilePath"];
             var routingDefinitions = File.ReadAllText(filePath).Deserialize<List<RoutingDefinition>>();
             EventRouter.SetRoutingDefinitions(routingDefinitions);
         }
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {

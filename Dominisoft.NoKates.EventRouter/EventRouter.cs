@@ -27,11 +27,11 @@ namespace Dominisoft.NoKates.EventRouter
                     if (!matchingDefinitions.Any())
                     {
                         var message = $"Could not find any matching Routing Definitions for '{routingKey}'";
-                        LoggingHelper.LogMessage(message);
+                        Logger.LogDebug(message);
                         return true;
                     }
-                    LoggingHelper.LogMessage("EventDetails:"+eventDetails);
-                    LoggingHelper.LogMessage($"{routingKey} : {matchingDefinitions.Count} Routes Found");
+                     Logger.LogDebug("EventDetails:"+eventDetails);
+                     Logger.LogDebug($"{routingKey} : {matchingDefinitions.Count} Routes Found");
                     foreach (var matchingDefinition in matchingDefinitions)
                     {
                         CreateRequestFromDefinition(matchingDefinition, eventDetails, requestId);
@@ -39,7 +39,7 @@ namespace Dominisoft.NoKates.EventRouter
                 }
                 catch (Exception e)
                 {
-                    LoggingHelper.LogMessage(e.Message);
+                     Logger.LogDebug(e.Message);
                 }
 
 
@@ -52,21 +52,22 @@ namespace Dominisoft.NoKates.EventRouter
         {
             var path = TransformHelper.ReplaceValues(matchingDefinition.RequestUri, eventDetails);
             var body = TransformHelper.ReplaceValues(matchingDefinition.RequestBody, eventDetails);
+            var obj = body.Deserialize<dynamic>();
             Thread.CurrentThread.SetRequestId(requestId);
-            LoggingHelper.LogMessage($"{matchingDefinition.DefinitionName} : {matchingDefinition.RequestType} {path}");
+             Logger.LogDebug($"{matchingDefinition.DefinitionName} : {matchingDefinition.RequestType} {path}");
             switch (matchingDefinition.RequestType)
             {
                 case "GET":
                     HttpHelper.Get(path);
                     break;
                 case "POST":
-                    HttpHelper.Post(path, (object)body);
+                    HttpHelper.Post(path, obj);
                     break;
                 case "PUT":
-                    HttpHelper.Put(path, (object)body);
+                    HttpHelper.Put(path, obj);
                     break;
                 case "DELETE":
-                    HttpHelper.Delete(path, (object)body);
+                    HttpHelper.Delete(path, obj);
                     break;
                 default:
                     throw new ArgumentException($"Unsupported Request Type '{matchingDefinition.RequestType}' in Routing Definition '{matchingDefinition.DefinitionName}'");
