@@ -1,8 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-  </PropertyGroup>
+    <TargetFrameworks>netcoreapp3.1;net6.0;</TargetFrameworks>  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Dominisoft.Nokates.Common" Version="1.0.19" />
